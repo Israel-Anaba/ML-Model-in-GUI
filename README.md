@@ -15,6 +15,7 @@ Make sure you have the following libraries installed in your Python environment:
 * pandas
 * xgboost
 
-![Image1](Image%201.png)
+![Image1](Images/Image1.png)
+
 
 
