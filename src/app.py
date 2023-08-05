@@ -225,24 +225,43 @@ import pickle
 import xgboost as xgb
 import os
 
-# Function to load the XGBoost model
+# Function to load the XGBoost model and other components
 def load_model():
-    with open('exported_data.pkl', 'rb') as file:
-        model = pickle.load(file)
-    return model
+    with open('src/Asset/ML_Comp/exported_data.pkl', 'rb') as file:
+        exported_data = pickle.load(file)
+
+    model = exported_data['best_model']
+    categorical_features = exported_data['categorical_imputer']
+    numeric_features = exported_data['numerical_imputer']
+    encoder = exported_data['encoder']
+    scaler = exported_data['scaler']
+
+    return model, categorical_features, numeric_features, encoder, scaler
+
+# Function to preprocess input data
+def preprocess_data(df, categorical_features, numeric_features, encoder, scaler):
+    # Apply the encoder to categorical features
+    df[categorical_features] = encoder.transform(df[categorical_features])
+
+    # Scale the numeric features
+    df[numeric_features] = scaler.transform(df[numeric_features])
+
+    return df
 
 # Streamlit app
 def main():
     st.title('Time Series Sales Prediction')
 
-    # Load the XGBoost model
-    model = load_model()
+    # Load the XGBoost model and other components
+    model, categorical_features, numeric_features, encoder, scaler = load_model()
 
     # Input fields for date, store_nbr, and family
-    min_date = datetime(2013, 1, 1)
-    date = st.date_input('Select Date', value=datetime(2023, 7, 30), min_value=min_date)
-    store_nbr = st.number_input('Enter Store Number', min_value=1, max_value=100, step=1, value=1)
-    family = st.text_input('Enter Family')
+    min_date = pd.to_datetime('2013-01-01')
+    max_date = pd.to_datetime('2023-07-30')
+    date = st.date_input('Select Date', value=max_date, min_value=min_date, max_value=max_date)
+    store_nbr = st.slider('Enter Store Number', min_value=1, max_value=9, value=1)
+    family_options = ['HOME_APPLIANCES', 'BABY_CARE', 'BREAD_BAKERY', 'FROZEN_FOODS', 'GROCERY_I', 'GROCERY_II', 'HOME_AND_KITCHEN_I', 'HOME_AND_KITCHEN_II', 'HOME_CARE', 'LAWN AND GARDEN', 'LIQUOR_WINE_BEER', 'PERSONAL CARE', 'PET SUPPLIES', 'PLAYERS_AND_ELECTRONICS', 'PREPARED_FOODS', 'SCHOOL AND OFFICE SUPPLIES']
+    family = st.selectbox('Select Family', family_options)
 
     if st.button('Predict Sales'):
         # Create a dictionary with the variable names and their values
@@ -254,6 +273,9 @@ def main():
 
         # Create a DataFrame from the dictionary
         df = pd.DataFrame(data_dict)
+
+        # Preprocess the input data
+        df = preprocess_data(df, categorical_features, numeric_features, encoder, scaler)
 
         # Convert the DataFrame to a DMatrix (required for XGBoost predictions)
         dmatrix = xgb.DMatrix(df)
