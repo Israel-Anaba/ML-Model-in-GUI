@@ -1,6 +1,6 @@
-## Streamlit App 🤖 🚀 🚀
+## 🚀User-Friendly Web Interaction for Machine Learning Ventures using Gradio & Streamlit 🤖 🚀 🚀
 
-This project demonstrates how to embed a machine learning model into a graphical user interface (GUI) using Streamlit. The goal is to create an interactive interface for sales prediction, catering to consumers and other stakeholders. The app was developed as part of the Azubi Africa Data Science Training.
+This endeavor showcases the integration of a machine learning model within a graphical user interface (GUI) using Streamlit and Gradio. The objective is to fashion an engaging interface for sales forecasting accessible to consumers and stakeholders via Streamlit. Additionally, a Telco Customer Churn Prediction application has been created by incorporating Gradio, enabling users to anticipate customer churn likelihood. This application was developed in conjunction with the Azubi Africa Data Science Training program.
 
 ## Prerequisites
 
@@ -30,9 +30,12 @@ To set up and run the Streamlit app in your local environment, follow these inst
 
 ![requiremnt](Images/Image4.png)
 
-NB: Run the Streamlit app using the following command:
+NB: Run the demo app using the following command:
 
 ![run_app](Images/Image5.png)
+
+![run_app](Images/GradioRun.png)
+
 
 The app will be launched in your default web browser. You can then interact with the interface to make sales predictions based on the input fields.
 
@@ -51,11 +54,15 @@ This project was developed during the Azubi Africa Data Science Training. Below 
 
 ## Features
 
+### Streamlit
+
 **Sales Prediction**: The app allows users to input the date, store number, and product family to get a sales prediction using a pre-trained XGBoost model.
 
 **Interactive Interface**: Streamlit provides an easy-to-use, web-based interface for users to interact with the model and get predictions.
 
 ## Model Training and Saving 🤖
+
+### Streamlit
 
 The XGBoost model was trained using data from the corporate favoritas chain to stores and saved as "exported_data.pkl" using XGBoost version during model training.
 
