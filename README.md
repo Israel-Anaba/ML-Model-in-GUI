@@ -36,7 +36,6 @@ NB: Run the demo app using the following command:
 
 ![run_app](Images/GradioRun.png)
 
-
 The app will be launched in your default web browser. You can then interact with the interface to make sales predictions based on the input fields.
 
 ## Preview 🔍 🤖
