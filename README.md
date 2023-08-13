@@ -12,7 +12,7 @@ Make sure you have the following libraries installed in your Python environment 
 
 You can install these libraries using the following command:
 
-![Image1](Images/Image1.png)
+![Image1](Screenshots/Image1.png)
 
 ## Setup 💻 🪛 🔧
 
@@ -20,21 +20,21 @@ To set up and run the Streamlit app in your local environment, follow these inst
 
 1. Clone this repository to your local machine:
 
-![git_clone](Images/Image2.png)
+![git_clone](Screenshots/Image2.png)
 
 2. Create and activate a virtual environment (optional but recommended):
 
-![venv](Images/Image3.png)
+![venv](Screenshots/Image3.png)
 
 3. Install the required libraries using pip:
 
-![requiremnt](Images/Image4.png)
+![requiremnt](Screenshots/Image4.png)
 
 NB: Run the demo app using the following command:
 
-![run_app](Images/Image5.png)
+![run_app](Screenshots/Image5.png)
 
-![run_app](Images/GradioRun.png)
+![run_app](Screenshots/GradioRun.png)
 
 The app will be launched in your default web browser. You can then interact with the interface to make sales predictions based on the input fields.
 
@@ -51,17 +51,14 @@ This project was developed during the Azubi Africa Data Science Training. Below 
 | Peter Mutiwri       |         |        |
 | Emmanuel Morkeh     |         |        |
 
-## Features
 
-### Streamlit
+## Features
 
 **Sales Prediction**: The app allows users to input the date, store number, and product family to get a sales prediction using a pre-trained XGBoost model.
 
 **Interactive Interface**: Streamlit provides an easy-to-use, web-based interface for users to interact with the model and get predictions.
 
 ## Model Training and Saving 🤖
-
-### Streamlit
 
 The XGBoost model was trained using data from the corporate favoritas chain to stores and saved as "exported_data.pkl" using XGBoost version during model training.
 
