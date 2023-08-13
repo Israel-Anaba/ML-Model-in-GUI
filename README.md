@@ -1,6 +1,6 @@
-## 🚀User-Friendly Web Interaction for Machine Learning Ventures using Gradio & Streamlit 🤖 🚀 🚀
+## 🚀User-Friendly Web Interaction for Machine Learning Ventures using Streamlit 🤖 🚀 🚀
 
-This endeavor showcases the integration of a machine learning model within a graphical user interface (GUI) using Streamlit and Gradio. The objective is to fashion an engaging interface for sales forecasting accessible to consumers and stakeholders via Streamlit. Additionally, a Telco Customer Churn Prediction application has been created by incorporating Gradio, enabling users to anticipate customer churn likelihood. This application was developed in conjunction with the Azubi Africa Data Science Training program.
+This endeavor showcases the integration of a machine learning model within a graphical user interface (GUI) using Streamlit. The objective is to fashion an engaging interface for sales forecasting accessible to consumers and stakeholders via Streamlit.This application was developed in conjunction with the Azubi Africa Data Science Training program.
 
 ## Prerequisites
 
