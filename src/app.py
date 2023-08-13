@@ -218,73 +218,77 @@
 
 
 
-import streamlit as st
-import pandas as pd
-from datetime import datetime
-import pickle
-import xgboost as xgb
-import os
 
-# Function to load the XGBoost model and other components
+import streamlit as st
+import pickle
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+
 def load_model():
     with open('src/Asset/ML_Comp/exported_data.pkl', 'rb') as file:
         exported_data = pickle.load(file)
 
     model = exported_data['best_model']
-    categorical_features = exported_data['categorical_imputer']
-    numeric_features = exported_data['numerical_imputer']
     encoder = exported_data['encoder']
     scaler = exported_data['scaler']
+    numeric_features = exported_data['numerical_imputer']
+    categorical_features = exported_data['categorical_imputer']
+    return model, encoder, scaler, numeric_features, categorical_features
 
-    return model, categorical_features, numeric_features, encoder, scaler
+def preprocess_data(input_df, encoder, scaler, numeric_features, categorical_features):
+    # Make a copy of the input DataFrame to avoid modifying the original
+    df = input_df.copy()
 
-# Function to preprocess input data
-def preprocess_data(df, categorical_features, numeric_features, encoder, scaler):
-    # Apply the encoder to categorical features
-    df[categorical_features] = encoder.transform(df[categorical_features])
+    # Encode categorical features using the provided encoder
+    encoded_features = encoder.transform(df[categorical_features]).toarray()
+    df_encoded = pd.DataFrame(encoded_features, columns=encoder.get_feature_names(input_df[categorical_features].columns))
 
-    # Scale the numeric features
+    # Concatenate the encoded features with the original DataFrame
+    df = pd.concat([df.drop(columns=categorical_features), df_encoded], axis=1)
+
+    # Scale the numeric features using the provided scaler
     df[numeric_features] = scaler.transform(df[numeric_features])
 
     return df
 
-# Streamlit app
 def main():
-    st.title('Time Series Sales Prediction')
+    st.title("Sales Prediction App")
 
-    # Load the XGBoost model and other components
-    model, categorical_features, numeric_features, encoder, scaler = load_model()
+    # Load the ML model and data preprocessors
+    model, encoder, scaler, numeric_features, categorical_features = load_model()
 
-    # Input fields for date, store_nbr, and family
-    min_date = pd.to_datetime('2013-01-01')
-    max_date = pd.to_datetime('2023-07-30')
-    date = st.date_input('Select Date', value=max_date, min_value=min_date, max_value=max_date)
-    store_nbr = st.slider('Enter Store Number', min_value=1, max_value=9, value=1)
-    family_options = ['HOME_APPLIANCES', 'BABY_CARE', 'BREAD_BAKERY', 'FROZEN_FOODS', 'GROCERY_I', 'GROCERY_II', 'HOME_AND_KITCHEN_I', 'HOME_AND_KITCHEN_II', 'HOME_CARE', 'LAWN AND GARDEN', 'LIQUOR_WINE_BEER', 'PERSONAL CARE', 'PET SUPPLIES', 'PLAYERS_AND_ELECTRONICS', 'PREPARED_FOODS', 'SCHOOL AND OFFICE SUPPLIES']
-    family = st.selectbox('Select Family', family_options)
+    # User input section
+    date = st.date_input("Date")
+    store_nbr = st.number_input("Store Number", min_value=1, step=1)
+    family = st.selectbox("Select Family", ["AUTOMOTIVE", "BABY CARE", "BEAUTY", "BEVERAGES", "BOOKS", "BREAD/BAKERY",
+                                            "PET SUPPLIES", "PLAYERS AND ELECTRONICS", "POULTRY",
+                                            "PREPARED FOODS", "PRODUCE", "SCHOOL AND OFFICE SUPPLIES", "SEAFOOD"])
+    onpromotion = st.radio("On Promotion", ["Not on Promotion", "On Promotion"])
 
-    if st.button('Predict Sales'):
-        # Create a dictionary with the variable names and their values
-        data_dict = {
+    # Predict button
+    if st.button("Predict Sales"):
+        # Prepare input data for prediction
+        input_data = {
             'Date': [date],
             'Store Number': [store_nbr],
-            'Family': [family],
+            'family': [family],
+            'onpromotion': [onpromotion],
+            'sales': [0],  # Placeholder value for sales column
+            'dcoilwtico': [0],  # Placeholder value for dcoilwtico column
+            'transactions': [0],  # Placeholder value for transactions column
         }
-
-        # Create a DataFrame from the dictionary
-        df = pd.DataFrame(data_dict)
+        input_df = pd.DataFrame(input_data)
 
         # Preprocess the input data
-        df = preprocess_data(df, categorical_features, numeric_features, encoder, scaler)
-
-        # Convert the DataFrame to a DMatrix (required for XGBoost predictions)
-        dmatrix = xgb.DMatrix(df)
+        df = preprocess_data(input_df, encoder, scaler, numeric_features, categorical_features)
 
         # Make predictions using the loaded XGBoost model
-        prediction = model.predict(dmatrix)
+        prediction = model.predict(df)
 
         # Display the prediction
-        st.success(f'Predicted Sales for {date}, Store: {store_nbr}, Family: {family}: {prediction[0]:.2f}')
+        st.write(f"Predicted Sales: {prediction[0]:.2f}")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
+
+
