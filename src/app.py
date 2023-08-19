@@ -1,7 +1,6 @@
 import streamlit as st
 import pickle
 import pandas as pd
-import numpy as np
 import xgboost as xgb
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 
@@ -12,22 +11,23 @@ with open("src/Asset/ML_Comp/exported_data.pkl", "rb") as f:
 def load_model():
     model = exported_data['best_model']
     encoder = exported_data['encoder']
+    scaler = exported_data['scaler']
     numeric_features = exported_data['numerical_imputer']
     categorical_features = exported_data['categorical_imputer']
-
-    # Recreate the MinMaxScaler
-    scaler = MinMaxScaler()
-    scaler.fit(exported_data['scaler'])  
-
     return model, encoder, scaler, numeric_features, categorical_features
 
 def preprocess_data(input_df, encoder, scaler, numeric_features, categorical_features):
     df = input_df.copy()
     df.drop(columns=['Date'], inplace=True)
 
+    # Encode categorical features using the provided encoder
     encoded_features = encoder.transform(df[categorical_features])
     df_encoded = pd.DataFrame(encoded_features, columns=encoder.get_feature_names(categorical_features))
+
+    # Concatenate the encoded features with the original DataFrame
     df = pd.concat([df.drop(columns=categorical_features), df_encoded], axis=1)
+
+    # Scale the numeric features using the provided scaler
     df[numeric_features] = scaler.transform(df[numeric_features])
 
     return df
@@ -48,6 +48,7 @@ def main():
 
     # Predict button
     if st.button("Predict Sales"):
+        # Prepare input data for prediction
         input_data = {
             'Date': [date],
             'Store Number': [store_nbr],
@@ -59,11 +60,11 @@ def main():
         }
         input_df = pd.DataFrame(input_data)
 
+        # Preprocess the input data
         df = preprocess_data(input_df, encoder, scaler, numeric_features, categorical_features)
 
         # Make predictions using the loaded XGBoost model
-        dmatrix = xgb.DMatrix(df)  # Convert DataFrame to DMatrix
-        prediction = model.predict(dmatrix)
+        prediction = model.predict(df)
 
         # Display the prediction
         st.write(f"Predicted Sales: {prediction[0]:.2f}")
