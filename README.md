@@ -51,7 +51,6 @@ This project was developed during the Azubi Africa Data Science Training. Below 
 | Peter Mutiwri       |         |        |
 | Emmanuel Morkeh     |         |        |
 
-
 ## Features
 
 **Sales Prediction**: The app allows users to input the date, store number, and product family to get a sales prediction using a pre-trained XGBoost model.
