@@ -9,6 +9,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from xgboost import DMatrix  
 import joblib
+import traceback
 
 # Load your trained XGBoost model from the JSON file
 def load_xgb_model():
@@ -30,7 +31,7 @@ encoder, scaler, num_imputer, cat_imputer = load_preprocessing_components()
     
 # Load your dataset
 train_data = pd.read_csv("src/Asset/ML_Comp/train_final.csv", index_col=1)
-
+train_data.rename(columns={'type_x': 'store_type'}, inplace=True)
 
 app_mode = st.sidebar.selectbox('Select Page', ['Home', 'Prediction'])  # Two pages
 
@@ -79,7 +80,7 @@ if app_mode=='Home':
    st.image('src/Asset/ML_Comp/img1.png')
    st.sidebar.header("This is a time series forecasting problem. The Favorita Grocery Sales Forecasting dataset is a fascinating collection of data that provides a great opportunity for analysis and prediction. We explore its various attributes, and analyze the sales patterns to build a robust sales forecasting model and answer some pertinent question on the dataset.") 
   
-   page_mode = st.selectbox('Select your option',['Data Set Description','Data Exploratory Analysis','Results','Conclusion']) #four forms or pages
+   page_mode = st.selectbox('Select your option',['Data Set Description','Data Exploratory Analysis','Results','You have not selected','Conclusion']) #four forms or pages
   
    if page_mode=='Data Set Description':
        st.header("Data Set Description")
@@ -101,17 +102,17 @@ if app_mode=='Home':
        st.write("Before we start building a sales forecasting model, we need to explore the data and analyze the patterns in the sales data. We start by importing the dataset and analyzing its different attributes.") 
        st.write("We can then use various visualization techniques to understand the trends in the data.")
        st.write("One interesting visualization is to plot the sales data against time. This gives us a clear idea of how sales have changed over the years. We can see that sales have been increasing gradually over time, with a few sharp peaks and drops.")
-       st.image("overall.png")
+       st.image("src/Asset/ML_Comp/img3 (2).png")
        st.write ("From the chart above we can say that, sales have increased over time from 2013 to 2016. However,")
        st.write("there was a sharp decline in sales from 2016 to 2017.") 
        st.write("This can be as a result of earthquake that occurred on 16th April, 2016.")
                  
-       st.image("distribution.png")       
+       st.image("src/Asset/ML_Comp/img2.jpg")       
        st.write("Here, we plotted distribution of each store type and the number of stores in that category. ")
        st.write("It was observed that store type D had the majority share, followed by type C with A, B and E in that order.")
        st.write("AGuayaquil and Quito are two cities that stand out in terms of the range of retail kinds available. These are unsurprising given that Quito is Ecuador's capital and Guayaquil is the country's largest and most populated metropolis.") 
        st.write("As a result, one might expect Corporacion Favorita to target these major cities with the most diverse store types, as evidenced by the highest counts of store nbrs attributed to those two cities.")       
-       st.image("im.png")
+       st.image("")
        st.image('src/Asset/ML_Comp/img1.png')
    
    elif page_mode=='Results':
@@ -123,7 +124,8 @@ if app_mode=='Home':
        st.write("A lower value of MSE, RMSE, and RMSLE indicates better performance of the model.")
        st.write("Based on the evaluation metrics, the random forest model performed the best with an MSE of 0.08, an RMSE of 0.28, and an RMSLE of 0.08.")
        st.write("Therefore, the random forest model is a good choice to report as it provided the best performance among the three models.")
-       
+   elif page_mode=='You have not selected': 
+       st.write('seleect an option')   
    else:
        st.header("Recommendation")
        st.write("we explored the Favorita Grocery Sales Forecasting dataset. We analyzed the various attributes of the dataset and visualized")
@@ -181,18 +183,18 @@ categoricals = ["family", "city", "holiday_type", "locale"]
 # List of features to scale
 cols_to_scale = ['dcoilwtico']
 with features_and_output:
-       features_and_output.write("This section captures your input to be used in predictions")
+       features_and_output.write(" section below captures your input to be used in predictions")
        features_and_output.subheader("Please Enter the detail")
        col1, col2, col3 = st.columns([1, 3, 3])
 
 # Create the input fields
-st.write("This section captures your input to be used in predictions")
-st.subheader("Please Enter the details")
+# st.write("This section captures your input to be used in predictions")
+# st.subheader("Please Enter the details")
 input_data = {}
 col1,col2 = st.columns(2)
 with col1:
            input_data['store_nbr'] = st.number_input("store_nbr",step=1)
-           input_data['products'] = st.selectbox("products", ['AUTOMOTIVE', 'CLEANING', 'BEAUTY', 'FOODS', 'STATIONERY',
+           input_data['family'] = st.selectbox("products", ['AUTOMOTIVE', 'CLEANING', 'BEAUTY', 'FOODS', 'STATIONERY',
           'CELEBRATION', 'GROCERY', 'HARDWARE', 'HOME', 'LADIESWEAR',
           'LAWN AND GARDEN', 'CLOTHING', 'LIQUOR,WINE,BEER', 'PET SUPPLIES'])
            input_data['onpromotion'] =st.number_input("onpromotion",step=1)
@@ -200,7 +202,7 @@ with col1:
           'Santo Domingo de los Tsachilas', 'Bolivar', 'Pastaza',
           'Tungurahua', 'Guayas', 'Santa Elena', 'Los Rios', 'Azuay', 'Loja',
           'El Oro', 'Esmeraldas', 'Manabi'])
-           input_data['type-x'] = st.selectbox("store_type",['D', 'C', 'B', 'E', 'A'])
+           input_data['store_type'] = st.selectbox("store_type",['D', 'C', 'B', 'E', 'A'])
            input_data['cluster'] = st.number_input("cluster",step=1)
 with col2:
        
@@ -208,7 +210,7 @@ with col2:
            input_data['year_y'] = st.number_input("year",step=1)
            input_data['month_x'] = st.slider("month",1,12)
            input_data['day_x'] = st.slider("day",1,31)
-           input_data['end_month_x'] = st.selectbox("end_month",['True','False'])
+        #    input_data['end_month_x'] = st.selectbox("end_month",['True','False'])
 # Create a DataFrame from user inputs
 input_df = pd.DataFrame([input_data])
 # Selecting categorical and numerical columns separately
@@ -218,7 +220,15 @@ num_columns = [col for col in input_df.columns if input_df[col].dtype != 'object
 # Load preprocessing components
 encoder, scaler, num_imputer, cat_imputer = load_preprocessing_components()
 # Fitting the imputers with training data
-num_imputer.fit(train_data[num_columns])
+# Funtion to ignore AttributeError: 'SimpleImputer' object has no attribute 'keep_empty_features'
+try:
+    num_imputer.fit(train_data[num_columns])
+except AttributeError as e:
+    # Handle the AttributeError and continue
+    print("An AttributeError occurred:", e)
+    traceback.print_exc()  # Print the traceback for debugging purposes
+    print("Continuing with prediction...")
+
 cat_imputer.fit(train_data[cat_columns])
 
 # Apply the imputers
