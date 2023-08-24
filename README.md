@@ -42,6 +42,11 @@ NB: Run the demo app using the following command:
 
 The app will be launched in your default web browser. You can then interact with the interface to make sales predictions based on the input fields.
 
+Go to your browser at the following address :
+
+ [App Link](http://192.168.8.114:8501)
+
+
 ## Preview 🔍 🤖
 
 ![App Preview](Screenshots/Preview.png)
