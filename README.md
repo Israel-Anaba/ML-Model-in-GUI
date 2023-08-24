@@ -42,10 +42,9 @@ NB: Run the demo app using the following command:
 
 The app will be launched in your default web browser. You can then interact with the interface to make sales predictions based on the input fields.
 
-Go to your browser at the following address :
+**Go to your browser at the following address to access the app :**
 
  [App Link](http://192.168.8.114:8501)
-
 
 ## Preview 🔍 🤖
 
@@ -55,12 +54,12 @@ Go to your browser at the following address :
 
 This project was developed during the Azubi Africa Data Science Training. Below is the details of the initial collaborators of this project with respective articles covering the process of the project and their individual github profiles.
 
-| Name                | Article                                                                                                                                                                      | Github              |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
-| Isaac Sarpong       |                                                                                                                                                                              |                     |
+| Name                | Article                                                                                                                                                                      | Github                                       |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| Isaac Sarpong       |                                                                                                                                                                              |                                              |
 | Israel Anaba Ayamga | [Demystifying Data Deployment: Empowering Insights with Streamlit](https://israelanaba.medium.com/demystifying-data-deployment-empowering-insights-with-streamlit-19c141e36ddf) | [Israel_Anaba](https://github.com/Israel-Anaba) |
-| Peter Mutiwri       |                                                                                                                                                                              |                     |
-| Emmanuel Morkeh     |                                                                                                                                                                              |                     |
+| Peter Mutiwri       |                                                                                                                                                                              |                                              |
+| Emmanuel Morkeh     |                                                                                                                                                                              |                                              |
 
 ## Features
 
